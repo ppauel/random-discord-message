@@ -1,8 +1,8 @@
 {
-    "guild": "your_guild_id",
+    "guild": "566243920229433344",
     "interactions": {
-        "receiveMessageComponents": true,
-        "receiveModals": true,
+        "receiveMessageComponents": false,
+        "receiveModals": false,
         "replyOnError": true,
         "splitCustomId": false,
         "useGuildCommands": true

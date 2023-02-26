@@ -1,7 +1,7 @@
 {
-  "name": "typescript-discord-bot",
+  "name": "random-discord-message",
   "version": "1.0.0",
-  "description": "A TypeScript Discord bot template",
+  "description": "A Discord bot",
   "main": "dist/bot.js",
   "scripts": {
     "start": "npm run start:bot",
@@ -15,18 +15,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ppauel/typescript-discord-bot.git"
+    "url": "git+https://github.com/ppauel/random-discord-message"
   },
   "author": "pauel",
-  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ppauel/typescript-discord-bot/issues"
+    "url": "https://github.com/ppauel/random-discord-message/issues"
   },
-  "homepage": "https://github.com/ppauel/typescript-discord-bot#readme",
+  "homepage": "https://github.com/ppauel/random-discord-message#readme",
   "dependencies": {
     "@fluent/bundle": "^0.17.1",
     "discord.js": "^14.7.1",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "zwsp": "^1.1.1"
   },
   "devDependencies": {
     "@types/node": "^18.11.11",

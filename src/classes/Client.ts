@@ -1,5 +1,5 @@
 import { ApplicationCommand, Client, ClientOptions, Collection, ColorResolvable, REST, RESTPostAPIApplicationCommandsJSONBody, Routes, Snowflake } from 'discord.js';
-import { AnySelectMenu, Button, ChatInputCommand, Command, ContextMenu, Event, Interaction, ModalSubmit } from '../interfaces';
+import { ChatInputCommand, Command, Event, Interaction } from '../interfaces';
 import configJSON from '../config.json';
 import path from 'path';
 import { readdirSync } from 'fs';
@@ -43,63 +43,31 @@ export default class ExtendedClient extends Client {
      */
     readonly commands: Collection<string, ChatInputCommand>;
     /**
-     * Collection of Context Menu Commands
-     */
-    readonly contextMenus: Collection<string, ContextMenu>;
-    /**
      * Collection of Events
      */
     readonly events: Collection<string, Event> = new Collection();
     /**
-     * Collection of Button Interactions
-     */
-    readonly buttons: Collection<string, Button>;
-    /**
-     * Collection of Select Menu Interactions
-     */
-    readonly selectMenus: Collection<string, AnySelectMenu>;
-    /**
-     * Collection of Modal Submit Interactions
-     */
-    readonly modals: Collection<string, ModalSubmit>;
-    /**
      * Config File
      */
-    readonly config:Config = configJSON as Config;
+    readonly config: Config = configJSON as Config;
 
     /**
      *
      * @param options Options for the client
      * @see https://discord.js.org/#/docs/discord.js/main/typedef/ClientOptions
      */
-    constructor(options:ClientOptions) {
+    constructor(options: ClientOptions) {
         super(options);
 
         console.log('\nStarting up...\n');
 
         // Paths
-        const commandPath = path.join(__dirname, '..', 'commands'),
-            contextMenuPath = path.join(__dirname, '..', 'context_menus'),
-            buttonPath = path.join(__dirname, '..', 'interactions', 'buttons'),
-            selectMenuPath = path.join(__dirname, '..', 'interactions', 'select_menus'),
-            modalPath = path.join(__dirname, '..', 'interactions', 'modals'),
+        const
+            commandPath = path.join(__dirname, '..', 'commands'),
             eventPath = path.join(__dirname, '..', 'events');
 
         // Command Handler
         this.commands = fileToCollection<ChatInputCommand>(commandPath);
-
-        // Context Menu Handler
-        this.contextMenus = fileToCollection<ContextMenu>(contextMenuPath);
-
-        // Interaction Handlers
-        // Button Handler
-        this.buttons = fileToCollection<Button>(buttonPath);
-
-        // Select Menu Handler
-        this.selectMenus = fileToCollection<AnySelectMenu>(selectMenuPath);
-
-        // Modal Handler
-        this.modals = fileToCollection<ModalSubmit>(modalPath);
 
         // Event Handler
         readdirSync(eventPath).filter((dir) => dir.endsWith(tsNodeRun ? '.ts' : '.js')).forEach((file) => import(path.join(eventPath, file))
@@ -121,11 +89,8 @@ export default class ExtendedClient extends Client {
         if (!this.token) { return console.warn('[Error] Token not present at command deployment'); }
 
         const rest = new REST({ version: this.config.restVersion }).setToken(this.token),
-            globalDeploy:RESTPostAPIApplicationCommandsJSONBody[] = (Array.from(this.commands.filter(cmd => cmd.global === true).values()).map(m => m.options.toJSON()) as RESTPostAPIApplicationCommandsJSONBody[])
-                .concat(Array.from(this.contextMenus.filter(cmd => cmd.global === true).values()).map(m => m.options.toJSON()) as RESTPostAPIApplicationCommandsJSONBody[]),
-
-            guildDeploy:RESTPostAPIApplicationCommandsJSONBody[] = (Array.from(this.commands.filter(cmd => cmd.global === false).values()).map(m => m.options.toJSON()) as RESTPostAPIApplicationCommandsJSONBody[])
-                .concat(Array.from(this.contextMenus.filter(cmd => cmd.global === false).values()).map(m => m.options.toJSON()) as RESTPostAPIApplicationCommandsJSONBody[]);
+            globalDeploy: RESTPostAPIApplicationCommandsJSONBody[] = (Array.from(this.commands.filter(cmd => cmd.global === true).values()).map(m => m.options.toJSON()) as RESTPostAPIApplicationCommandsJSONBody[]),
+            guildDeploy: RESTPostAPIApplicationCommandsJSONBody[] = (Array.from(this.commands.filter(cmd => cmd.global === false).values()).map(m => m.options.toJSON()) as RESTPostAPIApplicationCommandsJSONBody[]);
 
         console.log('[INFO] Deploying commands...');
 
@@ -157,12 +122,12 @@ export default class ExtendedClient extends Client {
  * @param dirPath Root directory of object
  * @returns Collection of Type
  */
-function fileToCollection<Type extends Command | Interaction>(dirPath:string):Collection<string, Type> {
+function fileToCollection<Type extends Command | Interaction>(dirPath: string): Collection<string, Type> {
 
-    const collection:Collection<string, Type> = new Collection();
+    const collection: Collection<string, Type> = new Collection();
 
     try {
-        const dirents = readdirSync(dirPath, { withFileTypes:true });
+        const dirents = readdirSync(dirPath, { withFileTypes: true });
 
         dirents.filter(dirent => dirent.isDirectory()).forEach((dir) => {
             const directoryPath = path.join(dirPath, dir.name);
