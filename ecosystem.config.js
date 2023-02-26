@@ -1,7 +1,7 @@
 module.exports = {
     apps: [{
         name: 'Random-Message',
-        script: './dist/index.js',
+        script: './dist/bot.js',
         watch: true,
     }],
 };
