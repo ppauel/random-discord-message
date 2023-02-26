@@ -62,7 +62,8 @@ const command: ChatInputCommand = {
                 .setAuthor({ name: 'Hidden Author', iconURL: _client.user?.avatarURL() || undefined })
                 .setColor(_client.config.colors.embed)
                 .setDescription(message.cleanContent.length ? message.cleanContent : null)
-                .setTimestamp(message.createdTimestamp),
+                .setTimestamp(message.createdTimestamp)
+                .setFooter({ text: `#${channel.name}` }),
 
             filter = (buttonInteraction: ButtonInteraction) => buttonInteraction.customId === 'reveal';
 
