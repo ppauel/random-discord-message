@@ -22,6 +22,11 @@ const command: ChatInputCommand = {
             await interaction.editReply({ content: 'Can\'t fetch messages in the selected channel.' }).catch(console.error);
             return;
         }
+        if (!channel.permissionsFor(interaction.guild?.members.me as GuildMember).has(PermissionFlagsBits.ReadMessageHistory) ||
+            !channel.permissionsFor(interaction.guild?.members.me as GuildMember).has(PermissionFlagsBits.ViewChannel)) {
+            await interaction.editReply({ content: 'I don\'t have permission to read messages in this channel. Try to select another channel using the `channel` option.' }).catch(console.error);
+            return;
+        }
         if (!channel.permissionsFor(interaction.member as GuildMember).has(PermissionFlagsBits.ReadMessageHistory) ||
             !channel.permissionsFor(interaction.member as GuildMember).has(PermissionFlagsBits.ViewChannel)) {
             await interaction.editReply({ content: 'You don\'t have permission to read messages in this channel. Try to select another channel using the `channel` option.' }).catch(console.error);
