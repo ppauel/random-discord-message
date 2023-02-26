@@ -3,7 +3,7 @@ import ExtendedClient from '../classes/Client';
 import { Event } from '../interfaces';
 
 const errorMessage = 'There was an error while executing this interaction.';
-// Send a warning on error
+/* Send a warning on error */
 async function replyError(error: unknown, client: ExtendedClient, interaction: RepliableInteraction) {
     if (error instanceof Error) {
         console.error(error);

@@ -21,11 +21,13 @@ export function getRandomDate(start: Date, end: Date) {
 
 export async function getRandomMessage(options: { from: Date, to: Date, channel: BaseGuildTextChannel }): Promise<false | Message<boolean>> {
     const { from, to, channel } = options,
+        /* Message Filter */
         filter = (m: Message | undefined): boolean => (m !== undefined && !m.author.bot && m.cleanContent.length !== 0);
 
     let i = 0;
     const tries = 10;
 
+    /* Try to fetch a matching message 10 times */
     while (i < tries) {
         i++;
         const snowflake = generateSnowflake(getRandomDate(from, to)).toString();
@@ -35,12 +37,12 @@ export async function getRandomMessage(options: { from: Date, to: Date, channel:
 
         if (!message) continue;
         if (filter(message)) {
-            console.debug('Found a message with id', message.id);
+            // console.debug('Found a message with id', message.id);
             return message;
         }
-        console.debug('Fetch failed, trying again...\nTry:', i, 'Snowflake:', snowflake, '\n');
+        // console.debug('Fetch failed, trying again...\nTry:', i, 'Snowflake:', snowflake, '\n');
     }
 
-    console.warn('Failed to fetch a message.');
+    // console.warn('Failed to fetch a message.');
     return false;
 }

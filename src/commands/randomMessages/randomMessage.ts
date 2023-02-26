@@ -18,10 +18,13 @@ const command: ChatInputCommand = {
     execute: async (_client, interaction) => {
         await interaction.deferReply().catch(console.error);
         const channel = interaction.options.getChannel('channel', false) || interaction.channel;
+
         if (!(channel instanceof BaseGuildTextChannel)) {
             await interaction.editReply({ content: 'Can\'t fetch messages in the selected channel.' }).catch(console.error);
             return;
         }
+
+        /* Permission check */
         if (!channel.permissionsFor(interaction.guild?.members.me as GuildMember).has(PermissionFlagsBits.ReadMessageHistory) ||
             !channel.permissionsFor(interaction.guild?.members.me as GuildMember).has(PermissionFlagsBits.ViewChannel)) {
             await interaction.editReply({ content: 'I don\'t have permission to read messages in this channel. Try to select another channel using the `channel` option.' }).catch(console.error);
@@ -32,6 +35,7 @@ const command: ChatInputCommand = {
             await interaction.editReply({ content: 'You don\'t have permission to read messages in this channel. Try to select another channel using the `channel` option.' }).catch(console.error);
             return;
         }
+
         const
             from = asDate(channel.id),
             to = channel.lastMessageId?.length ? asDate(channel.lastMessageId) : new Date(),
